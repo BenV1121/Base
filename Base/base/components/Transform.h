@@ -108,6 +108,7 @@ public:
 	void setGlobalAngle(float a)				{ m_localAngle    = (getGlobalToLocal() * vec3(vec2::fromAngle(a),0)).xy.angle(); }
 
 	vec2 getGlobalUp() const { return getGlobalTransform().c2.xy.normal(); }
+	vec2 getGlobalHorizontal() const { return getGlobalTransform().c1.xy.normal(); }
 
 	vec2 getGlobalPosition()  const { return getGlobalTransform().getTrans2D(); }
 	vec2 getGlobalScale()		const { return getGlobalTransform().getScale2D(); }

@@ -19,15 +19,15 @@
 class GameState : public BaseState
 {
 	Factory factory;
-	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font;
+	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_scroll;
 	ObjectPool<Entity>::iterator currentCamera;
 
 public:
 	virtual void init()
 	{
 		spr_bullet = sfw::loadTextureMap("../res/bullet.png");
-		spr_space = sfw::loadTextureMap("../res/space.jpg");
-		spr_ship = sfw::loadTextureMap("../res/ship.png");
+		spr_space = sfw::loadTextureMap("../res/BG.png");
+		spr_ship = sfw::loadTextureMap("../res/Ship2.png");
 		spr_roid = sfw::loadTextureMap("../res/rock.png");
 		spr_font = sfw::loadTextureMap("../res/font.png",32,4);
 	}
@@ -44,7 +44,7 @@ public:
 		// call some spawning functions!
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
-		factory.spawnPlayer(spr_ship, spr_font);
+		factory.spawnPlayer(spr_ship);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
@@ -58,7 +58,7 @@ public:
 
 	// should return what state we're going to.
 	// REMEMBER TO HAVE ENTRY AND STAY states for each application state!
-	virtual size_t next() const { return 0; }
+	virtual size_t next() const { return 3; }
 
 
 	// update loop, where 'systems' exist
@@ -83,8 +83,8 @@ public:
 				e.controller->poll(&e.transform, &e.rigidbody, dt);
 				if (e.controller->shotRequest) // controller requested a bullet fire
 				{
-					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition()  + e.transform->getGlobalUp()*48,
-											vec2{ 32,32 }, e.transform->getGlobalAngle(), 200, 1);
+					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition()  + e.transform->getGlobalUp()*60,
+											vec2{ 32,32 }, e.transform->getGlobalAngle(), 400, 1);
 				}
 			}
 			// lifetime decay update
@@ -127,6 +127,8 @@ public:
 							if (it->rigidbody && bit->rigidbody)
 								base::DynamicResolution(cd,&it->transform,&it->rigidbody, &bit->transform, &bit->rigidbody);
 							
+							//^ help me god.
+
 							// condition for static resolution
 							else if (it->rigidbody && !bit->rigidbody)							
 								base::StaticResolution(cd, &it->transform, &it->rigidbody);					

@@ -126,9 +126,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BaseState.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayerController.h" />
   </ItemGroup>
   <ItemGroup>
