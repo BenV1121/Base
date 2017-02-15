@@ -3,6 +3,7 @@
 #include "sfwdraw.h"
 #include "BaseState.h"
 #include "Factory.h"
+#include "Health.h"
 
 
 /*

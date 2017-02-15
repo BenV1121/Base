@@ -14,6 +14,7 @@ class Factory
 	ObjectPool<Lifetime>  lifetimes;
 	ObjectPool<Camera>    cameras;
 	ObjectPool<Text>	  texts;
+	ObjectPool<Health>	  healths;
 	ObjectPool<PlayerController> controllers;
 
 public:
@@ -88,6 +89,7 @@ public:
 		e->collider = colliders.push();
 		e->controller = controllers.push();
 		e->text = texts.push();
+		//e->
 
 		/*e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
