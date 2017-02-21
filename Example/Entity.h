@@ -17,6 +17,7 @@ public:
 	ObjectPool<Sprite>::iterator sprite;
 	ObjectPool<Camera>::iterator camera;
 	ObjectPool<Text>::iterator text;
+	ObjectPool<Health>::iterator health;
 
 	// example of a component in this project
 	ObjectPool<PlayerController>::iterator controller;
@@ -30,6 +31,7 @@ public:
 		sprite.free();
 		camera.free();
 		text.free();
+		health.free();
 
 		controller.free();
 	}

@@ -126,7 +126,10 @@ public:
 						{
 							// condition for dynamic resolution
 							if (it->rigidbody && bit->rigidbody)
+							{
 								base::DynamicResolution(cd,&it->transform,&it->rigidbody, &bit->transform, &bit->rigidbody);
+								
+							}
 							
 							//^ help me god.
 

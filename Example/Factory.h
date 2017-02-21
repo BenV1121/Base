@@ -27,8 +27,10 @@ public:
 	Factory(size_t size = 512)
 								: entities(size), transforms(size), rigidbodies(size),
 								  colliders(size), sprites(size), lifetimes(size),
-								  cameras(size), controllers(size), texts(size)
+								  cameras(size), controllers(size), texts(size), 
+								  healths(size)
 	{
+
 	}
 
 	// What follows are specialized spawning functions
@@ -64,6 +66,7 @@ public:
 		e->sprite = sprites.push();
 		e->lifetime = lifetimes.push();
 		e->collider = colliders.push();
+		e->health = healths.push();
 
 		e->transform->setLocalPosition(pos);
 		e->transform->setLocalScale(dim);
@@ -89,7 +92,7 @@ public:
 		e->collider = colliders.push();
 		e->controller = controllers.push();
 		e->text = texts.push();
-		//e->
+		e->health = healths.push();
 
 		/*e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
@@ -114,6 +117,7 @@ public:
 		e->rigidbody = rigidbodies.push();
 		e->sprite = sprites.push();
 		e->collider = colliders.push();
+		e->health = healths.push();
 
 		e->transform->setLocalScale(vec2{ 48,48 });
 
