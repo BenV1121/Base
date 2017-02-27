@@ -129,7 +129,10 @@
     <ClInclude Include="BaseState.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="FinalLevelState.h" />
+    <ClInclude Include="GameOverState.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Level2State.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="PlayerController.h" />
   </ItemGroup>

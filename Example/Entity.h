@@ -3,13 +3,17 @@
 #include "Base.h"
 
 #include "PlayerController.h"
+#include "Health.h"
 
 using namespace base;
 
+enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET};
 
 class Entity
 {
 public:
+	TYPE type = GENERIC;
+
 	ObjectPool<Transform>::iterator transform;
 	ObjectPool<Rigidbody>::iterator rigidbody;
 	ObjectPool<Collider>::iterator  collider;
@@ -17,10 +21,10 @@ public:
 	ObjectPool<Sprite>::iterator sprite;
 	ObjectPool<Camera>::iterator camera;
 	ObjectPool<Text>::iterator text;
-	ObjectPool<Health>::iterator health;
 
 	// example of a component in this project
 	ObjectPool<PlayerController>::iterator controller;
+	ObjectPool<Health>::iterator health;
 
 	void onFree()
 	{

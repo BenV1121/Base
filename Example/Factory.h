@@ -60,6 +60,7 @@ public:
 	ObjectPool<Entity>::iterator spawnBullet(unsigned sprite, vec2 pos, vec2 dim, float ang, float impulse, unsigned faction)
 	{
 		auto e = entities.push();
+		e->type = BULLET;
 
 		e->transform = transforms.push();
 		e->rigidbody = rigidbodies.push();
@@ -77,7 +78,7 @@ public:
 
 		e->rigidbody->addImpulse(e->transform->getGlobalUp() * impulse);
 
-		e->lifetime->lifespan = 1.6f;
+		e->lifetime->lifespan = 1.7f;
 		
 		return e;
 	}
@@ -85,7 +86,7 @@ public:
 	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite)
 	{
 		auto e = entities.push();
-
+		e->type = PLAYER;
 		e->transform = transforms.push();
 		e->rigidbody = rigidbodies.push();
 		e->sprite = sprites.push();
@@ -93,6 +94,7 @@ public:
 		e->controller = controllers.push();
 		e->text = texts.push();
 		e->health = healths.push();
+		//e->health->health = 2;
 
 		/*e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
@@ -101,6 +103,20 @@ public:
 
 		e->transform->setLocalScale(vec2{48,100});
 		e->transform->setLocalAngle(-1.57);
+		e->transform->setGlobalPosition(vec2{-350,0});
+
+		// Boundaries: If the player moves out of the boundaries, it will spawn back.
+
+		if (e->transform->getGlobalPosition().x <= -360)
+		{
+			e->rigidbody->velocity.x = -e->rigidbody->velocity.x;
+			e->transform->setGlobalPosition(vec2{ -340,  e->transform->getGlobalPosition().y });
+		}
+		if (e->transform->getGlobalPosition().x >= 360)
+		{
+			e->rigidbody->velocity.x = -e->rigidbody->velocity.x;
+			e->transform->setGlobalPosition(vec2{ 350,  e->transform->getGlobalPosition().y });
+		}
 
 
 		e->sprite->sprite_id = sprite;
@@ -112,7 +128,7 @@ public:
 	ObjectPool<Entity>::iterator spawnAsteroid(unsigned sprite)
 	{
 		auto e = entities.push();
-
+		e->type = ASTEROID;
 		e->transform = transforms.push();
 		e->rigidbody = rigidbodies.push();
 		e->sprite = sprites.push();

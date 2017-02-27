@@ -6,25 +6,23 @@
 #include "Health.h"
 
 
-
 /*
-	The gamestate represents a discrete container of all that is 
-	necessary to drive the game experience.
+The gamestate represents a discrete container of all that is
+necessary to drive the game experience.
 
-	A factory object is used to manage the creation and deletion of
-	objects in the simulation.
+A factory object is used to manage the creation and deletion of
+objects in the simulation.
 
-	The game state updates the entities within the factory using
-	a series of 'systems.'
+The game state updates the entities within the factory using
+a series of 'systems.'
 */
 
-class GameState : public BaseState
+class FinalLevelState : public BaseState
 {
 	Factory factory;
 	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_scroll;
 	ObjectPool<Entity>::iterator currentCamera;
 	bool isGameOver = false;
-	bool win = false;
 	//Health health;
 
 public:
@@ -34,13 +32,12 @@ public:
 		spr_space = sfw::loadTextureMap("../res/BG.png");
 		spr_ship = sfw::loadTextureMap("../res/Ship2.png");
 		spr_roid = sfw::loadTextureMap("../res/rock.png");
-		spr_font = sfw::loadTextureMap("../res/font.png",32,4);
+		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 	}
 
 	virtual void play()
 	{
 		isGameOver = false;
-		win = false;
 		// delete any old entities sitting around
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
@@ -65,33 +62,27 @@ public:
 
 	// should return what state we're going to.
 	// REMEMBER TO HAVE ENTRY AND STAY states for each application state!
-	virtual size_t next() const 
-	{ 
+	virtual size_t next() const
+	{
 		if (isGameOver)
 			return GAMEOVER_ENTER;
-		else if (win)
-			return LEVEL2_ENTER; 
-		else 
-			return 3; 
+		else
+			return 7;
 	}
 
 	// update loop, where 'systems' exist
 	virtual void step()
 	{
 		float dt = sfw::getDeltaTime();
-		int numAsteroids = 0;
 
 		// maybe spawn some asteroids here.
 
-		for(auto it = factory.begin(); it != factory.end();) // no++!
+		for (auto it = factory.begin(); it != factory.end();) // no++!
 		{
-			if (it->type == ASTEROID)
-				numAsteroids++;
-
 			bool del = false; // does this entity end up dying?
 			auto &e = *it;    // convenience reference
 
-			// rigidbody update
+							  // rigidbody update
 			if (e.transform && e.rigidbody)
 				e.rigidbody->integrate(&e.transform, dt);
 
@@ -101,8 +92,8 @@ public:
 				e.controller->poll(&e.transform, &e.rigidbody, dt);
 				if (e.controller->shotRequest) // controller requested a bullet fire
 				{
-					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition()  + e.transform->getGlobalUp()*60,
-											vec2{ 32,32 }, e.transform->getGlobalAngle(), 400, 1);
+					factory.spawnBullet(spr_bullet, e.transform->getGlobalPosition() + e.transform->getGlobalUp() * 60,
+						vec2{ 32,32 }, e.transform->getGlobalAngle(), 400, 1);
 				}
 			}
 			// lifetime decay update
@@ -119,7 +110,7 @@ public:
 				if (!e.health->isAlive())
 				{
 					del = true;
-					
+
 					if (e.controller)
 					{
 						isGameOver = true;
@@ -136,52 +127,48 @@ public:
 			}
 		}
 
-		if (numAsteroids == 0)
-		{
-			win = true;
-		}
 
 		// Physics system!
 		// You'll want to extend this with custom collision responses
 
-		
-		for(auto it = factory.begin(); it != factory.end(); it++) // for each entity
-			for(auto bit = it; bit != factory.end(); bit++)		  // for every other entity
+
+		for (auto it = factory.begin(); it != factory.end(); it++) // for each entity
+			for (auto bit = it; bit != factory.end(); bit++)		  // for every other entity
 				if (it != bit && it->transform && it->collider && bit->transform && bit->collider)
-				// if they aren't the same and they both have collidable bits...
+					// if they aren't the same and they both have collidable bits...
 				{
 					// test their bounding boxes
 					if (base::BoundsTest(&it->transform, &it->collider, &bit->transform, &bit->collider))
 					{
 						// if true, get the penetration and normal from the convex hulls
 						auto cd = base::ColliderTest(&it->transform, &it->collider, &bit->transform, &bit->collider);
-						
+
 						// if there was a collision,
 						if (cd.result())
 						{
 							// condition for dynamic resolution
 							if (it->rigidbody && bit->rigidbody)
 							{
-								base::DynamicResolution(cd,&it->transform,&it->rigidbody, &bit->transform, &bit->rigidbody);
+								base::DynamicResolution(cd, &it->transform, &it->rigidbody, &bit->transform, &bit->rigidbody);
 								//std::cout << "-1";
 
 								if (it->health)
 									it->health->health -= 1;
-									
+
 								if (bit->health)
 									bit->health->health -= 1;
 							}
 
 							// condition for static resolution
-							else if (it->rigidbody && !bit->rigidbody)							
-								base::StaticResolution(cd, &it->transform, &it->rigidbody);					
+							else if (it->rigidbody && !bit->rigidbody)
+								base::StaticResolution(cd, &it->transform, &it->rigidbody);
 						}
 					}
 				}
 	}
 
 
-	virtual void draw()	
+	virtual void draw()
 	{
 		// kind of round about, but this is the camera matrix from the factory's current camera
 		auto cam = currentCamera->camera->getCameraMatrix(&currentCamera->transform);

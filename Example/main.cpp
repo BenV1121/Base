@@ -2,6 +2,9 @@
 #include "sfwdraw.h"
 #include "GameState.h"
 #include "MenuState.h"
+#include "GameOverState.h"
+#include "Level2State.h"
+#include "FinalLevelState.h"
 #include <cassert>
 
 
@@ -17,9 +20,14 @@ void main()
 	STATES curState = MENU_ENTER;
 
 	GameState gs;
+	Level2State l2s;
+	FinalLevelState fs;
 	MenuState ms;
+	GameOverState gos;
 
 	gs.init(); // called once
+	l2s.init();
+	fs.init();
 	ms.init();
 
 	gs.play(); // Should be called each time the state is transitioned into
@@ -42,6 +50,28 @@ void main()
 			gs.step();
 			gs.draw();
 			curState = (STATES)gs.next();
+			break;
+		case LEVEL2_ENTER:
+			l2s.play();
+		case LEVEL2:
+			l2s.step();
+			l2s.draw();
+			curState = (STATES)l2s.next();
+			break;
+		case FINAL_LEVEL_ENTER:
+			fs.play();
+		case FINAL_LEVEL:
+			fs.step();
+			fs.draw();
+			curState = (STATES)fs.next();
+			break;
+		case GAMEOVER_ENTER:
+			gos.play();
+		case GAMEOVER:
+			gos.draw();
+			gos.step();
+			gos.init();
+			curState = (STATES)gos.next();
 			break;
 		}
 

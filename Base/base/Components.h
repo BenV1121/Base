@@ -11,3 +11,4 @@
 #include "components\Sprite.h"
 #include "components\Camera.h"
 #include "components\Text.h"
+#include "Health.h"
