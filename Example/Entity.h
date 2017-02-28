@@ -7,7 +7,7 @@
 
 using namespace base;
 
-enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET};
+enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET, BOSS};
 
 class Entity
 {

@@ -20,24 +20,27 @@ a series of 'systems.'
 class FinalLevelState : public BaseState
 {
 	Factory factory;
-	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_scroll;
+	unsigned spr_space, spr_ship, spr_bullet, spr_boss, spr_font, spr_scroll;
 	ObjectPool<Entity>::iterator currentCamera;
 	bool isGameOver = false;
+	bool win = false;
 	//Health health;
 
 public:
 	virtual void init()
 	{
 		spr_bullet = sfw::loadTextureMap("../res/bullet2.png");
-		spr_space = sfw::loadTextureMap("../res/BG.png");
+		spr_space = sfw::loadTextureMap("../res/BG3.png");
 		spr_ship = sfw::loadTextureMap("../res/Ship2.png");
-		spr_roid = sfw::loadTextureMap("../res/rock.png");
+		//spr_roid = sfw::loadTextureMap("../res/rock.png");
+		spr_boss = sfw::loadTextureMap("../res/boss.png");
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 	}
 
 	virtual void play()
 	{
 		isGameOver = false;
+		win = false;
 		// delete any old entities sitting around
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
@@ -49,10 +52,7 @@ public:
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
 		factory.spawnPlayer(spr_ship);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
+		factory.spawnBoss(spr_boss);
 	}
 
 	virtual void stop()
@@ -66,6 +66,8 @@ public:
 	{
 		if (isGameOver)
 			return GAMEOVER_ENTER;
+		if (win)
+			return ENDING_ENTER;
 		else
 			return 7;
 	}
@@ -74,11 +76,15 @@ public:
 	virtual void step()
 	{
 		float dt = sfw::getDeltaTime();
+		int numBoss = 0;
 
 		// maybe spawn some asteroids here.
 
 		for (auto it = factory.begin(); it != factory.end();) // no++!
 		{
+			if (it->type == BOSS)
+				numBoss++;
+
 			bool del = false; // does this entity end up dying?
 			auto &e = *it;    // convenience reference
 
@@ -127,6 +133,10 @@ public:
 			}
 		}
 
+		if (numBoss == 0)
+		{
+			win = true;
+		}
 
 		// Physics system!
 		// You'll want to extend this with custom collision responses
@@ -149,7 +159,7 @@ public:
 							// condition for dynamic resolution
 							if (it->rigidbody && bit->rigidbody)
 							{
-								base::DynamicResolution(cd, &it->transform, &it->rigidbody, &bit->transform, &bit->rigidbody);
+							//	base::DynamicResolution(cd, &it->transform, &it->rigidbody, &bit->transform, &bit->rigidbody);
 								//std::cout << "-1";
 
 								if (it->health)
