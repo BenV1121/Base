@@ -37,6 +37,7 @@ namespace base
 		static mat3 translate(float x, float y)	{ return translate(vec2{ x,y }); }
 
 		static mat3 scale(const vec2 &d)		{ mat3 r; r.c1 *= d.x; r.c2 *= d.y; return r; }
+
 		static mat3 scale(float w, float h)		{ return scale(vec2{ w,h }); }
 		static mat3 scale(float s)				{ return scale(s, s); }
 

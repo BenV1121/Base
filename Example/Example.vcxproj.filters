@@ -45,6 +45,12 @@
     <ClInclude Include="Ending.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CannonController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

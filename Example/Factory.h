@@ -16,6 +16,8 @@ class Factory
 	ObjectPool<Text>	  texts;
 	ObjectPool<Health>	  healths;
 	ObjectPool<PlayerController> controllers;
+	ObjectPool<BossController> bosses;
+	ObjectPool<CannonController> cannons;
 
 public:
 
@@ -28,7 +30,7 @@ public:
 								: entities(size), transforms(size), rigidbodies(size),
 								  colliders(size), sprites(size), lifetimes(size),
 								  cameras(size), controllers(size), texts(size), 
-								  healths(size)
+								  healths(size), bosses(size), cannons(size)
 	{
 
 	}
@@ -83,7 +85,7 @@ public:
 		return e;
 	}
 
-	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite)
+	ObjectPool<Entity>::iterator spawnPlayer(unsigned sprite, unsigned font)
 	{
 		auto e = entities.push();
 		e->type = PLAYER;
@@ -94,12 +96,14 @@ public:
 		e->controller = controllers.push();
 		e->text = texts.push();
 		e->health = healths.push();
-		//e->health->health = 2;
+		e->health->health = 3;
 
-		/*e->text->sprite_id = font;
+		char h = e->health->health;
+
+		e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
-		e->text->off_scale = vec2{.5f,.5f};
-		e->text->setString("Player1");*/
+		e->text->off_scale = vec2{.4f,.4f};
+		e->text->setString("Health: " "&h");
 
 		e->transform->setLocalScale(vec2{48,100});
 		e->transform->setLocalAngle(-1.57);
@@ -146,20 +150,55 @@ public:
 		return e;
 	}
 
+	ObjectPool<Entity>::iterator spawnCannon(vec2 offset, vec2 scale)
+	{
+		auto e = entities.push();
+		e->transform = transforms.push();
+		e->collider = colliders.push();
+		e->health = healths.push();
+		e->cannon = cannons.push();
+		e->rigidbody = rigidbodies.push();
+
+		e->transform->setLocalPosition(offset);
+		e->transform->setLocalScale(scale);
+		e->health->health = 4;
+
+		return e;
+	}
+
 	ObjectPool<Entity>::iterator spawnBoss(unsigned sprite)
 	{
 		auto e = entities.push();
+
+
 		e->type = BOSS;
 		e->transform = transforms.push();
 		e->rigidbody = rigidbodies.push();
 		e->sprite = sprites.push();
 		e->collider = colliders.push();
 		e->health = healths.push();
+		e->boss = bosses.push();
+
+		// vec2{312,306};
+		e->sprite->dimensions = vec2{1.56f,7.65f};
+
 
 		e->health->health = 20;
 
-		e->transform->setLocalScale(vec2{312,306});
+		e->transform->setGlobalScale(vec2{ 200,40 });
 		e->transform->setGlobalPosition(vec2{350,0});
+
+		e->transform->addChild(
+			&spawnCannon(vec2{ -.17f, 3.25f }, vec2{ 1,1 })->transform);
+		e->transform->addChild(
+			&spawnCannon(vec2{ .1f, 1.75f }, vec2{ 1,1 })->transform);
+		e->transform->addChild(
+			&spawnCannon(vec2{ .1f, -1.75f}, vec2{ 1,1 })->transform);
+		e->transform->addChild(
+			&spawnCannon(vec2{ -.17f, -3.25f }, vec2{ 1,1 })->transform);
+
+
+
 
 		e->sprite->sprite_id = sprite;
 
@@ -185,9 +224,9 @@ public:
 		e->sprite->sprite_id = sprite;
 		e->sprite->dimensions = vec2{ 1.2f, 1.2f };
 
-		e->rigidbody->addImpulse(e->transform->getGlobalUp() * impulse);
+		e->rigidbody->addImpulse(vec2::fromAngle(ang) * impulse);
 
-		e->lifetime->lifespan = 1;
+		e->lifetime->lifespan = 1.7f;
 
 		return e;
 	}
