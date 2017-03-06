@@ -23,13 +23,14 @@ class FinalLevelState : public BaseState
 	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_scroll;
 	ObjectPool<Entity>::iterator currentCamera;
 	bool isGameOver = false;
+	bool win = false;
 	//Health health;
 
 public:
 	virtual void init()
 	{
 		spr_bullet = sfw::loadTextureMap("../res/bullet2.png");
-		spr_space = sfw::loadTextureMap("../res/BG.png");
+		spr_space = sfw::loadTextureMap("../res/BG3.png");
 		spr_ship = sfw::loadTextureMap("../res/Ship2.png");
 		spr_roid = sfw::loadTextureMap("../res/rock.png");
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
@@ -38,6 +39,7 @@ public:
 	virtual void play()
 	{
 		isGameOver = false;
+		win = false;
 		// delete any old entities sitting around
 		for (auto it = factory.begin(); it != factory.end(); it->onFree(), it.free());
 
@@ -73,6 +75,7 @@ public:
 	// update loop, where 'systems' exist
 	virtual void step()
 	{
+
 		float dt = sfw::getDeltaTime();
 
 		// maybe spawn some asteroids here.
