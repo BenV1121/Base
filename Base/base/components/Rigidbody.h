@@ -11,7 +11,7 @@ class Rigidbody
 public:
 	float drag, mass;
 	vec2 impulse, force, acceleration, velocity; // defaults to 0's
-
+	
 	float angularDrag;
 	float spin, torque, angularAcceleration, angularVelocity;
 
