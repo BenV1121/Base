@@ -98,30 +98,19 @@ public:
 		e->health = healths.push();
 		e->health->health = 3;
 
-		char h = e->health->health;
+		/*int health = e->health->health;
+		char buffer[80];*/
+
 
 		e->text->sprite_id = font;
 		e->text->offset = vec2{ -24,-24 };
 		e->text->off_scale = vec2{.4f,.4f};
-		e->text->setString("Health: " "&h");
+		//sprintf_s(buffer ,80 ,"Health: %d", health);
+		//e->text->setString(buffer);
 
 		e->transform->setLocalScale(vec2{48,100});
 		e->transform->setLocalAngle(-1.57);
 		e->transform->setGlobalPosition(vec2{-350,0});
-
-		// Boundaries: If the player moves out of the boundaries, it will spawn back.
-
-		if (e->transform->getGlobalPosition().x <= -360)
-		{
-			e->rigidbody->velocity.x = -e->rigidbody->velocity.x;
-			e->transform->setGlobalPosition(vec2{ -340,  e->transform->getGlobalPosition().y });
-		}
-		if (e->transform->getGlobalPosition().x >= 360)
-		{
-			e->rigidbody->velocity.x = -e->rigidbody->velocity.x;
-			e->transform->setGlobalPosition(vec2{ 350,  e->transform->getGlobalPosition().y });
-		}
-
 
 		e->sprite->sprite_id = sprite;
 

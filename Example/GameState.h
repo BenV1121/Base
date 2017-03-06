@@ -116,6 +116,14 @@ public:
 			// health update
 			if (e.health)
 			{
+				if (e.controller)
+				{
+					int health = e.health->health;
+					char buffer[80];
+
+					sprintf_s(buffer, 80, "Health: %d", health);
+					e.text->setString(buffer);
+				}
 				if (!e.health->isAlive())
 				{
 					del = true;
@@ -123,6 +131,37 @@ public:
 					if (e.controller)
 					{
 						isGameOver = true;
+					}
+				}
+			}
+
+			if (e.rigidbody)
+			{
+				if (e.controller)
+				{
+
+					// Boundaries: If the player moves out of the boundaries, it will spawn back.
+
+					if (e.transform->getGlobalPosition().x <= -360)
+					{
+						e.rigidbody->velocity.x = -e.rigidbody->velocity.x;
+						e.transform->setGlobalPosition(vec2{ -340,  e.transform->getGlobalPosition().y });
+					}
+					if (e.transform->getGlobalPosition().x >= 360)
+					{
+						e.rigidbody->velocity.x = -e.rigidbody->velocity.x;
+						e.transform->setGlobalPosition(vec2{ 350,  e.transform->getGlobalPosition().y });
+					}
+
+					if (e.transform->getGlobalPosition().y <= -300)
+					{
+						e.rigidbody->velocity.y = -e.rigidbody->velocity.y;
+						e.transform->setGlobalPosition(vec2{ e.transform->getGlobalPosition().x, -290 });
+					}
+					if (e.transform->getGlobalPosition().y >= 300)
+					{
+						e.rigidbody->velocity.y = -e.rigidbody->velocity.y;
+						e.transform->setGlobalPosition(vec2{ e.transform->getGlobalPosition().x, 290 });
 					}
 				}
 			}
