@@ -20,7 +20,7 @@ a series of 'systems.'
 class FinalLevelState : public BaseState
 {
 	Factory factory;
-	unsigned spr_space, spr_ship, spr_bullet, spr_roid, spr_font, spr_scroll;
+	unsigned spr_space, spr_ship, spr_bullet, spr_boss, spr_font, spr_scroll, spr_ebullet;
 	ObjectPool<Entity>::iterator currentCamera;
 	bool isGameOver = false;
 	bool win = false;
@@ -32,7 +32,9 @@ public:
 		spr_bullet = sfw::loadTextureMap("../res/bullet2.png");
 		spr_space = sfw::loadTextureMap("../res/BG3.png");
 		spr_ship = sfw::loadTextureMap("../res/Ship2.png");
-		spr_roid = sfw::loadTextureMap("../res/rock.png");
+		//spr_roid = sfw::loadTextureMap("../res/rock.png");
+		spr_boss = sfw::loadTextureMap("../res/boss.png");
+		spr_ebullet = sfw::loadTextureMap("../res/enemybullet.png");
 		spr_font = sfw::loadTextureMap("../res/font.png", 32, 4);
 	}
 
@@ -50,11 +52,8 @@ public:
 		// call some spawning functions!
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
-		factory.spawnPlayer(spr_ship);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
-		factory.spawnAsteroid(spr_roid);
+		factory.spawnPlayer(spr_ship, spr_font);
+		factory.spawnBoss(spr_boss);
 	}
 
 	virtual void stop()
@@ -68,6 +67,8 @@ public:
 	{
 		if (isGameOver)
 			return GAMEOVER_ENTER;
+		if (win)
+			return ENDING_ENTER;
 		else
 			return 7;
 	}
@@ -77,11 +78,15 @@ public:
 	{
 
 		float dt = sfw::getDeltaTime();
+		int numBoss = 0;
 
 		// maybe spawn some asteroids here.
 
 		for (auto it = factory.begin(); it != factory.end();) // no++!
 		{
+			if (it->type == BOSS)
+				numBoss++;
+
 			bool del = false; // does this entity end up dying?
 			auto &e = *it;    // convenience reference
 
@@ -99,6 +104,25 @@ public:
 						vec2{ 32,32 }, e.transform->getGlobalAngle(), 400, 1);
 				}
 			}
+
+
+			if (e.boss && e.rigidbody)
+			{
+				e.boss->update(dt, *e.rigidbody);
+			}
+
+			if (e.cannon)
+			{
+				e.cannon->update(dt);
+				if (e.cannon->doFire)
+				{
+					factory.spawnEnemyBullet(spr_ebullet, e.transform->getGlobalPosition() + vec2{-132,0}, vec2{ 32,32 }, 180 * DEG2RAD, 400, 2);
+				}
+			}
+
+			//factory.spawnEnemyBullet(spr_ebullet, e.transform->getGlobalPosition() + e.transform->getGlobalUp() * -60,
+				//vec2{ 32,32 }, e.transform->getGlobalAngle(), 400, 1);
+
 			// lifetime decay update
 			if (e.lifetime)
 			{
@@ -130,6 +154,10 @@ public:
 			}
 		}
 
+		if (numBoss == 0)
+		{
+			win = true;
+		}
 
 		// Physics system!
 		// You'll want to extend this with custom collision responses
@@ -152,7 +180,7 @@ public:
 							// condition for dynamic resolution
 							if (it->rigidbody && bit->rigidbody)
 							{
-								base::DynamicResolution(cd, &it->transform, &it->rigidbody, &bit->transform, &bit->rigidbody);
+							//	base::DynamicResolution(cd, &it->transform, &it->rigidbody, &bit->transform, &bit->rigidbody);
 								//std::cout << "-1";
 
 								if (it->health)

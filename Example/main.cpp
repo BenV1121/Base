@@ -5,6 +5,7 @@
 #include "GameOverState.h"
 #include "Level2State.h"
 #include "FinalLevelState.h"
+#include "Ending.h"
 #include <cassert>
 
 
@@ -24,11 +25,13 @@ void main()
 	FinalLevelState fs;
 	MenuState ms;
 	GameOverState gos;
+	EndingState es;
 
 	gs.init(); // called once
 	l2s.init();
 	fs.init();
 	ms.init();
+	es.init();
 
 	gs.play(); // Should be called each time the state is transitioned into
 
@@ -64,6 +67,14 @@ void main()
 			fs.step();
 			fs.draw();
 			curState = (STATES)fs.next();
+			break;
+		case ENDING_ENTER:
+			es.play();
+		case ENDING:
+			es.draw();
+			es.step();
+			es.init();
+			curState = (STATES)es.next();
 			break;
 		case GAMEOVER_ENTER:
 			gos.play();

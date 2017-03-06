@@ -4,10 +4,12 @@
 
 #include "PlayerController.h"
 #include "Health.h"
+#include "CannonController.h"
+#include "BossController.h"
 
 using namespace base;
 
-enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET};
+enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET, BOSS};
 
 class Entity
 {
@@ -25,6 +27,8 @@ public:
 	// example of a component in this project
 	ObjectPool<PlayerController>::iterator controller;
 	ObjectPool<Health>::iterator health;
+	ObjectPool<BossController>::iterator boss;
+	ObjectPool<CannonController>::iterator cannon;
 
 	void onFree()
 	{
@@ -38,5 +42,7 @@ public:
 		health.free();
 
 		controller.free();
+		boss.free();
+		cannon.free();
 	}
 };

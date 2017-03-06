@@ -51,7 +51,7 @@ public:
 		// call some spawning functions!
 		factory.spawnStaticImage(spr_space, 0, 0, 800, 600);
 
-		factory.spawnPlayer(spr_ship);
+		factory.spawnPlayer(spr_ship, spr_font);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
 		factory.spawnAsteroid(spr_roid);
@@ -65,14 +65,14 @@ public:
 
 	// should return what state we're going to.
 	// REMEMBER TO HAVE ENTRY AND STAY states for each application state!
-	virtual size_t next() const 
+	virtual size_t next() const
 	{ 
 		if (isGameOver)
 			return GAMEOVER_ENTER;
 		else if (win)
-			return LEVEL2_ENTER; 
-		else 
-			return 3; 
+			return LEVEL2_ENTER;
+		else
+			return 3;
 	}
 
 	// update loop, where 'systems' exist
