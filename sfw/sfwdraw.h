@@ -32,6 +32,7 @@ NOTE: YOU MUST CALL initContext for any of the functions to work!
 #define KEY_ENTER	  257
 #define KEY_TAB		  258
 #define KEY_BACKSPACE 259
+#define KEY_LEFT_SHIFT   340
 
 #define KEY_RIGHT     262
 #define KEY_LEFT	  263

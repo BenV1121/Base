@@ -22,8 +22,8 @@ private:
 	{
 		mat3 res = getLocalTransform();
 		
-		if(oldParent) oldParent->getGlobalTransform() * res;
-		if(newParent) newParent->getGlobalTransform().inverse() * res;
+		if(oldParent) res = oldParent->getGlobalTransform() * res;
+		if(newParent) res = newParent->getGlobalTransform().inverse() * res;
 		
 		m_localPosition = res.getTrans2D();
 		m_localScale	= res.getScale2D();

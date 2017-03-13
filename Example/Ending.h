@@ -6,7 +6,7 @@
 
 using namespace sfw;
 
-class EndingState
+class EndingState : public BaseState
 {
 	Factory factory;
 	unsigned spr_logo;
@@ -31,7 +31,7 @@ public:
 	virtual size_t next() const
 	{
 		if (getKey(KEY_ENTER))
-			return GAME_ENTER;
+			return BONUS_ENTER;
 		else
 			return ENDING;
 	}

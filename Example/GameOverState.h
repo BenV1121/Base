@@ -7,7 +7,7 @@
 
 using namespace sfw;
 
-class GameOverState
+class GameOverState : public BaseState
 {
 	Factory factory;
 	unsigned spr_logo;

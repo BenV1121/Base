@@ -220,6 +220,57 @@ public:
 		return e;
 	}
 
+	ObjectPool<Entity>::iterator powerUp(unsigned line, vec2 pos, vec2 dim, float ang, float impulse, unsigned faction)
+	{
+		auto e = entities.push();
+		e->type = POWERUP;
+
+		e->transform = transforms.push();
+		e->rigidbody = rigidbodies.push();
+		e->sprite = sprites.push();
+		e->lifetime = lifetimes.push();
+		e->collider = colliders.push();
+		e->health = healths.push();
+
+		e->transform->setLocalPosition(pos);
+		e->transform->setLocalScale(dim);
+		e->transform->setLocalAngle(ang);
+
+		
+		e->sprite->dimensions = vec2{ 1.2f, 1.2f };
+
+		e->rigidbody->addImpulse(vec2::fromAngle(ang) * impulse);
+
+		e->lifetime->lifespan = 1.7f;
+
+		return e;
+	}
+
+	ObjectPool<Entity>::iterator spawnLaser(unsigned sprite, vec2 pos, vec2 dim, float ang, float impulse, unsigned faction)
+	{
+		auto e = entities.push();
+		e->type = BULLET;
+
+		e->transform = transforms.push();
+		e->rigidbody = rigidbodies.push();
+		e->sprite = sprites.push();
+		e->lifetime = lifetimes.push();
+		e->collider = colliders.push();
+		e->health = healths.push();
+
+		e->transform->setLocalPosition(pos);
+		e->transform->setLocalScale(dim);
+		e->transform->setLocalAngle(ang);
+
+		e->sprite->sprite_id = sprite;
+		e->sprite->dimensions = vec2{ 1.2f, 1.2f };
+
+		e->rigidbody->addImpulse(e->transform->getGlobalUp() * impulse);
+
+		e->lifetime->lifespan = 1.7f;
+
+		return e;
+	}
 };
 
 

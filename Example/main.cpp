@@ -32,6 +32,7 @@ void main()
 	fs.init();
 	ms.init();
 	es.init();
+	gos.init();
 
 	gs.play(); // Should be called each time the state is transitioned into
 

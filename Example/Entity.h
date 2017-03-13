@@ -9,7 +9,7 @@
 
 using namespace base;
 
-enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET, BOSS};
+enum TYPE {GENERIC, ASTEROID, PLAYER, BULLET, BOSS, POWERUP};
 
 class Entity
 {

@@ -26,6 +26,11 @@ public:
 		if (sfw::getKey('S'))
 			rb->addForce(T->getGlobalHorizontal() *  speed);
 
+		if (sfw::getKey(KEY_LEFT_SHIFT))
+			rb->drag = 1.0f;
+		else
+			rb->drag = 0.0f;
+
 		shotTimer -= dt;
 		if (sfw::getKey(' ') && shotTimer < 0)
 		{
